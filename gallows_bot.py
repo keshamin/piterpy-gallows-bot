@@ -7,6 +7,7 @@ from messages import Messages as M
 from markups import main_menu, gen_game_markup
 from models import User, Word
 from stickers import MISTAKE_SICKERS, LOOSE_STICKER
+from logger import logger
 
 
 class GallowsBot(TeleBot):
@@ -33,8 +34,11 @@ class GallowsBot(TeleBot):
     # --- Handlers ---
 
     def start(self, message: Message):
-        User(telegram_id=message.chat.id).save()
+        user = User(telegram_id=message.chat.id)
+        user.save()
+
         self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
+        logger.info(f'New user: {user.telegram_id}, username: {message.from_user.username}')
     
     # Gallows section
     def new_game(self, message: Message):

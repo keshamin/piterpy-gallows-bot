@@ -1,9 +1,9 @@
 import mongoengine as me
 import config
-import logging
+from logger import logger
 
 
-logging.info(f'DB connection string: {config.DB_URI}')
+logger.info(f'DB connection string: {config.DB_URI}')
 db = me.connect(host=config.DB_URI)
 
 
