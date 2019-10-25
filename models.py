@@ -56,7 +56,7 @@ class User(me.Document):
 
         if letter in self.complete_word:
             # Fill all occurrences of the letter in self.current_word
-            for idx, i_letter in self.complete_word:
+            for idx, i_letter in enumerate(self.complete_word):
                 if i_letter == letter:
                     self.current_word[idx] = letter
 
