@@ -14,6 +14,8 @@ class Messages(object):
     INFO_BUTTON = 'Инфо'
 
     START_MESSAGE = 'Привет! Здесь будет стартовый текст.'
+    # TODO: add description
+    HELP = 'ЗДЕСЬ ДОЛЖНО БЫТЬ КАКОЕ_ТО ОПИСАНИЕ'
 
     # Gallows
     ALREADY_PLAYING = 'Вы уже в игре!'

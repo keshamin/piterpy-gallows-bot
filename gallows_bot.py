@@ -34,11 +34,14 @@ class GallowsBot(TeleBot):
     # --- Handlers ---
 
     def start(self, message: Message):
-        user = User(telegram_id=message.chat.id)
-        user.save()
+        if len(User.objects.filter(telegram_id=message.chat.id)) == 0:
+            user = User(telegram_id=message.chat.id)
+            user.save()
 
-        self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
-        logger.info(f'New user: {user.telegram_id}, username: {message.from_user.username}')
+            self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
+            logger.info(f'New user: {user.telegram_id}, username: {message.from_user.username}')
+        else:
+            self.send_message(message.chat.id, M.HELP)
     
     # Gallows section
     def new_game(self, message: Message):
