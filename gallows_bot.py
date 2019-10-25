@@ -93,7 +93,7 @@ class GallowsBot(TeleBot):
     def _send_current_word(self, user: User):
         spaced_word = ' '.join(user.current_word)
 
-        game_markup = gen_game_markup(word=user.current_word, used_letters=user.used_letters)
+        game_markup = gen_game_markup(word=user.complete_word, used_letters=user.used_letters)
         self.send_message(user.telegram_id, spaced_word, reply_markup=game_markup)
 
     def _loose(self, user: User):
