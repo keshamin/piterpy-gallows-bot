@@ -67,13 +67,13 @@ class GallowsBot(TeleBot):
         user = User.objects.get(telegram_id=message.chat.id)
         letter = message.text.strip()
 
-        user.guess_letter(letter)
-
         # Letter is already played
         if letter in user.used_letters:
             self.send_message(message.chat.id, M.USED_LETTER)
             self._send_current_word(user)
             return
+
+        user.guess_letter(letter)
 
         if letter not in user.complete_word:
             if user.mistakes > self.mistakes_allowed:
