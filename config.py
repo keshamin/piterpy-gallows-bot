@@ -15,3 +15,6 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 DB_URI = os.getenv('MONGODB_URI') or \
          f'mongodb://{DB_USER or ""}:{DB_PASSWORD or ""}@{DB_HOST or ""}:{DB_PORT or ""}/{DB_NAME or ""}'
+
+# mLab compatibility issue
+DB_URI = f'{DB_URI}?retryWrites=false'
