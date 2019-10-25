@@ -8,7 +8,7 @@ db = me.connect(host=config.DB_URI)
 
 
 class User(me.Document):
-    telegram_id = me.LongField(required=True)
+    telegram_id = me.LongField(required=True, primary_key=True)
     current_word = me.StringField(max_length=100)
     complete_word = me.StringField(max_length=100)
     used_letters = me.ListField(me.StringField(regex='[a-zа-я]{1}', null=False))
