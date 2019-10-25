@@ -13,6 +13,5 @@ DB_NAME = os.getenv('DB_NAME')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
-
-
-
+DB_URI = os.getenv('MONGODB_URI') or \
+         f'mongodb://{DB_USER or ""}:{DB_PASSWORD or ""}@{DB_HOST or ""}:{DB_PORT or ""}/{DB_NAME or ""}'

@@ -4,13 +4,7 @@ import mongoengine as me
 import config
 
 
-db = me.connect(
-    host=config.DB_HOST,
-    port=config.DB_PORT,
-    db=config.DB_NAME,
-    username=config.DB_USER,
-    password=config.DB_PASSWORD
-)
+db = me.connect(host=config.DB_URI)
 
 
 class User(me.Document):
