@@ -1,6 +1,7 @@
 from gallows_bot import GallowsBot
 import config
 import traceback
+import time
 
 
 bot = GallowsBot(
@@ -13,3 +14,4 @@ while True:
         bot.polling(none_stop=True)
     except Exception as e:
         traceback.print_exc()
+        time.sleep(5)
