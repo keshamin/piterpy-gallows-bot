@@ -16,6 +16,8 @@ class Messages(object):
     START_MESSAGE = 'Привет! Здесь будет стартовый текст.'
     # TODO: add description
     HELP = 'ЗДЕСЬ ДОЛЖНО БЫТЬ КАКОЕ_ТО ОПИСАНИЕ'
+    NOT_FOUND = 'Не могу распарсить сообщение. Воспользуйтесь главным меню.'
+    NOT_FOUND_IN_GAME = 'Не могу распарсить сообщение. Воспользуйтесь игровым меню.'
 
     # Gallows
     ALREADY_PLAYING = 'Вы уже в игре!'

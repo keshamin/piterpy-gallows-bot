@@ -26,10 +26,18 @@ class GallowsBot(TeleBot):
         self.message_handler(commands=['start'])(self.start)
 
         # Gallows
-        self.message_handler(commands=['play'], regexp=f'^{M.GALLOWS_BUTTON}$')(self.new_game)
-        self.message_handler(commands=['giveup'], regexp=f'^{M.GIVEUP_BUTTON}')(self.give_up)
+        self.message_handler(commands=['play'])(self.new_game)
+        self.message_handler(regexp=f'^{M.GALLOWS_BUTTON}$')(self.new_game)
+
+        self.message_handler(commands=['giveup'])(self.give_up)
+        self.message_handler(regexp=f'^{M.GIVEUP_BUTTON}')(self.give_up)
+
         self.message_handler(func=lambda m: len(m.text.strip()) == 1 and m.text.isalnum())(self.guess_letter)
-        self.message_handler(commands=['rules'], regexp=f'^{M.RULES_BUTTON}$')(self.rules)
+
+        self.message_handler(commands=['rules'])(self.rules)
+        self.message_handler(regexp=f'^{M.RULES_BUTTON}$')(self.rules)
+
+        self.message_handler(lambda: True)(self.not_found)
 
     # --- Handlers ---
 
@@ -92,6 +100,14 @@ class GallowsBot(TeleBot):
 
     def rules(self, message: Message):
         self._send_rules(chat_id=message.chat.id)
+
+    def not_found(self, message: Message):
+        user = User.objects.get(telegram_id=message.chat.id)
+
+        if user.is_playing():
+            self.send_message(message.chat.id, M.NOT_FOUND_IN_GAME)
+        else:
+            self.send_message(message.chat.id, M.NOT_FOUND)
 
     # --- Shortcut methods ---
 
