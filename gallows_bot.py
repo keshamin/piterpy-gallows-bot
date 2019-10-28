@@ -37,7 +37,7 @@ class GallowsBot(TeleBot):
         self.message_handler(commands=['rules'])(self.rules)
         self.message_handler(regexp=f'^{M.RULES_BUTTON}$')(self.rules)
 
-        self.message_handler(lambda: True)(self.not_found)
+        self.message_handler(lambda m: True)(self.not_found)
 
     # --- Handlers ---
 
