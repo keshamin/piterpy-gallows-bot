@@ -26,7 +26,7 @@ class User(me.Document):
     def _end_game(self):
         self.current_word = None
         self.complete_word = None
-        self.used_letters.clear()
+        self.used_letters = []
 
         self.games += 1
 
