@@ -37,6 +37,8 @@ class GallowsBot(TeleBot):
         self.message_handler(commands=['rules'])(self.rules)
         self.message_handler(regexp=f'^{M.RULES_BUTTON}$')(self.rules)
 
+        self.message_handler(regexp=f'^{M.INFO_BUTTON}$')(self.info)
+
         self.message_handler(func=lambda m: True)(self.not_found)
 
     # --- Handlers ---
@@ -50,6 +52,9 @@ class GallowsBot(TeleBot):
             logger.info(f'New user: {user.telegram_id}, username: {message.from_user.username}')
         else:
             self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
+
+    def info(self, message: Message):
+        self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
     
     # Gallows section
     def new_game(self, message: Message):
