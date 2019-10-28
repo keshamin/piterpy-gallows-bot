@@ -74,8 +74,11 @@ class GallowsBot(TeleBot):
 
     def give_up(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
-        user.loose()
+
+        # in this exact order!
         self._loose(user)
+        user.loose()
+
         self._send_stats(user)
 
     def guess_letter(self, message: Message):
