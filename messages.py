@@ -23,6 +23,8 @@ class Messages(object):
     USED_LETTER = 'Эта буква уже сыграна.'
     IT_WAS = lambda x: f'Это было слово "{x}"'
     YOU_WIN = 'Да! Вы выиграли!'
+    STATS = lambda user: f'🏆 Побед: {user.wins}\n' \
+                         f'💣 Поражений: {user.looses}'
 
     # TODO: Write rules text!
     RULES = 'ЗДЕСЬ БУДУТ ПРАВИЛА!'

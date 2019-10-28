@@ -79,12 +79,14 @@ class GallowsBot(TeleBot):
             if user.mistakes > self.mistakes_allowed:
                 self._loose(user)
                 user.loose()
+                self._send_stats(user)
             else:
                 self._mistake(user)
         else:
             if user.current_word == user.complete_word:
                 self._win(user)
                 user.win()
+                self._send_stats(user)
             else:
                 self._send_current_word(user)
 
@@ -113,6 +115,9 @@ class GallowsBot(TeleBot):
 
     def _send_rules(self, chat_id):
         self.send_message(chat_id, M.RULES)
+
+    def _send_stats(self, user: User):
+        self.send_message(user.telegram_id, M.STATS(user))
 
     # --- Utility methods ---
 

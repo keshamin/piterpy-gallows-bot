@@ -45,6 +45,10 @@ class User(me.Document):
         correct_letters_played = len(set(self.current_word)) - 1    # Minus 1 is to remove '_' from set
         return letters_played - correct_letters_played
 
+    @property
+    def looses(self):
+        return self.games - self.wins
+
     def guess_letter(self, letter: str):
         if len(letter) != 1:
             raise ValueError('Only 1 letter accepted!')
