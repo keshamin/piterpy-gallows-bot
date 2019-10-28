@@ -68,7 +68,7 @@ class User(me.Document):
 
 
 class Word(me.Document):
-    word = me.StringField(primary_key=True)
+    word = me.StringField(primary_key=True, regex=r'[a-zа-я0-9]+')
 
     @classmethod
     def get_random_word(cls) -> str:

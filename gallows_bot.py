@@ -65,7 +65,7 @@ class GallowsBot(TeleBot):
 
     def guess_letter(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
-        letter = message.text.strip()
+        letter = message.text.strip().lower()
 
         # Letter is already played
         if letter in user.used_letters:
@@ -113,7 +113,7 @@ class GallowsBot(TeleBot):
         self.send_message(user.telegram_id, M.YOU_WIN)
         self.send_message(user.telegram_id, M.IT_WAS(user.complete_word))
 
-    def _send_rules(self, chat_id):
+    def _send_rules(self, chat_id: int):
         self.send_message(chat_id, M.RULES)
 
     def _send_stats(self, user: User):
