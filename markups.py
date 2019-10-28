@@ -20,7 +20,7 @@ def get_letters(word):
 
 
 def gen_game_markup(word, used_letters):
-    game_markup = types.ReplyKeyboardMarkup()
+    game_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
     all_keys = digits + get_letters(word)
 

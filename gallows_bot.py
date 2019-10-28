@@ -26,10 +26,10 @@ class GallowsBot(TeleBot):
         self.message_handler(commands=['start'])(self.start)
 
         # Gallows
-        self.message_handler(commands=['play'])(self.new_game)
-        self.message_handler(commands=['giveup'])(self.give_up)
+        self.message_handler(commands=['play'], regexp=f'^{M.GALLOWS_BUTTON}$')(self.new_game)
+        self.message_handler(commands=['giveup'], regexp=f'^{M.GIVEUP_BUTTON}')(self.give_up)
         self.message_handler(func=lambda m: len(m.text.strip()) == 1 and m.text.isalnum())(self.guess_letter)
-        self.message_handler(commands=['rules'])(self.rules)
+        self.message_handler(commands=['rules'], regexp=f'^{M.RULES_BUTTON}$')(self.rules)
 
     # --- Handlers ---
 
@@ -41,7 +41,7 @@ class GallowsBot(TeleBot):
             self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
             logger.info(f'New user: {user.telegram_id}, username: {message.from_user.username}')
         else:
-            self.send_message(message.chat.id, M.HELP)
+            self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
     
     # Gallows section
     def new_game(self, message: Message):
@@ -103,7 +103,7 @@ class GallowsBot(TeleBot):
 
     def _loose(self, user: User):
         self.send_sticker(user.telegram_id, LOOSE_STICKER)
-        self.send_message(user.telegram_id, M.IT_WAS(user.complete_word))
+        self.send_message(user.telegram_id, M.IT_WAS(user.complete_word), reply_markup=main_menu)
 
     def _mistake(self, user: User):
         self.send_sticker(user.telegram_id, self.get_mistake_sticker(user.mistakes))
@@ -111,7 +111,7 @@ class GallowsBot(TeleBot):
 
     def _win(self, user: User):
         self.send_message(user.telegram_id, M.YOU_WIN)
-        self.send_message(user.telegram_id, M.IT_WAS(user.complete_word))
+        self.send_message(user.telegram_id, M.IT_WAS(user.complete_word), reply_markup=main_menu)
 
     def _send_rules(self, chat_id: int):
         self.send_message(chat_id, M.RULES)
