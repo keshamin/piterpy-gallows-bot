@@ -70,6 +70,7 @@ class GallowsBot(TeleBot):
     def give_up(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
         self._loose(user)
+        self._send_stats(user)
 
     def guess_letter(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
