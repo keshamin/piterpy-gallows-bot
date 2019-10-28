@@ -54,7 +54,7 @@ class GallowsBot(TeleBot):
             self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
 
     def info(self, message: Message):
-        self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
+        self.send_message(message.chat.id, M.INFO, reply_markup=main_menu)
     
     # Gallows section
     def new_game(self, message: Message):
