@@ -1,5 +1,6 @@
 from gallows_bot import GallowsBot
 import config
+import traceback
 
 
 bot = GallowsBot(
@@ -7,4 +8,8 @@ bot = GallowsBot(
     token=config.TOKEN
 )
 
-bot.polling(none_stop=True)
+while True:
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        traceback.print_exc()
