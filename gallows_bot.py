@@ -37,7 +37,7 @@ class GallowsBot(TeleBot):
         self.message_handler(commands=['rules'])(self.rules)
         self.message_handler(regexp=f'^{M.RULES_BUTTON}$')(self.rules)
 
-        self.message_handler(lambda m: True)(self.not_found)
+        self.message_handler(func=lambda m: True)(self.not_found)
 
     # --- Handlers ---
 
@@ -105,9 +105,11 @@ class GallowsBot(TeleBot):
         user = User.objects.get(telegram_id=message.chat.id)
 
         if user.is_playing():
-            self.send_message(message.chat.id, M.NOT_FOUND_IN_GAME)
+            self.send_message(message.chat.id,
+                              M.NOT_FOUND_IN_GAME,
+                              reply_markup=gen_game_markup(user.complete_word, user.used_letters))
         else:
-            self.send_message(message.chat.id, M.NOT_FOUND)
+            self.send_message(message.chat.id, M.NOT_FOUND, reply_markup=main_menu)
 
     # --- Shortcut methods ---
 
