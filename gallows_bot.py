@@ -168,9 +168,11 @@ class GallowsBot(TeleBot):
         self.send_message(user.telegram_id, M.STATS(user))
 
     def _send_wl_top(self, telegram_id: int):
-        response = ''
         # Line length on mobiles ~ 30 chars
         line_template = '{i:<3}{identifier:<20}{wl:>3}\n'
+
+        # Head line
+        response = line_template.format(i='№', identifier='Имя / ID', wl='+/-')
 
         limit = 10
         for i, user in enumerate(User.top_by_wl_diff()[:limit]):
@@ -186,7 +188,7 @@ class GallowsBot(TeleBot):
 
             response += line
 
-        response = f'{M.WL_TOP_HEAD}```{response}```'
+        response = f'```\n{response}\n```'
 
         self.send_message(telegram_id, response, parse_mode='Markdown')
 
