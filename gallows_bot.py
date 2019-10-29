@@ -4,7 +4,7 @@ from telebot import TeleBot
 from telebot.types import Message
 
 from messages import Messages as M
-from markups import main_menu, gen_game_markup
+from markups import main_menu, gen_game_markup, medals_gen
 from models import User, Word
 from stickers import MISTAKE_SICKERS, LOOSE_STICKER
 from logger import logger, handler_log
@@ -171,11 +171,7 @@ class GallowsBot(TeleBot):
         response = M.WL_TOP_HEAD
         line_template = '{i}. {medal}{identifier} {wl:>10}\n'
 
-        def medals_gen():
-            for m in ('🥇 ', '🥈 ', '🥉 '):
-                yield m
-            while True:
-                yield ''
+        medals = medals_gen()
 
         limit = 10
         for i, user in enumerate(User.top_by_wl_diff()[:limit]):
@@ -184,7 +180,7 @@ class GallowsBot(TeleBot):
 
             response += line_template.format(
                 i=number,
-                medal=medals_gen(),
+                medal=next(medals),
                 identifier=identifier,
                 wl=user.wl_diff
             )

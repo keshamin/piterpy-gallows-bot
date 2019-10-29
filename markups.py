@@ -37,3 +37,10 @@ def gen_game_markup(word, used_letters):
     game_markup.row(*[types.KeyboardButton(M.RULES_BUTTON),
                       types.KeyboardButton(M.GIVEUP_BUTTON)])
     return game_markup
+
+
+def medals_gen():
+    for m in ('🥇 ', '🥈 ', '🥉 '):
+        yield m
+    while True:
+        yield ''
