@@ -47,7 +47,11 @@ class GallowsBot(TeleBot):
     @handler_log
     def start(self, message: Message):
         if len(User.objects.filter(telegram_id=message.chat.id)) == 0:
-            user = User(telegram_id=message.chat.id)
+
+            names = [name for name in (message.from_user.first_name, message.from_user.last_name) if name is not None]
+            user = User(telegram_id=message.chat.id,
+                        username=message.from_user.username,
+                        full_name=' '.join(names))
             user.save()
 
             self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
