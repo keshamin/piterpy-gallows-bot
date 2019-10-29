@@ -169,7 +169,7 @@ class GallowsBot(TeleBot):
 
     def _send_wl_top(self, telegram_id: int):
         response = M.WL_TOP_HEAD
-        line_template = '{i} {identifier:<20}\t{wl:>4}\n'
+        line_template = '{i:<4}{identifier:<20}{wl:>4}\n'
 
         numbers = top_numbers_gen()
 
@@ -187,6 +187,8 @@ class GallowsBot(TeleBot):
                 line = f'*{line}*'
 
             response += line
+
+        response = f'```{response}```'
 
         self.send_message(telegram_id, response, parse_mode='Markdown')
 
