@@ -49,9 +49,11 @@ class GallowsBot(TeleBot):
         if len(User.objects.filter(telegram_id=message.chat.id)) == 0:
 
             names = [name for name in (message.from_user.first_name, message.from_user.last_name) if name is not None]
+            full_name = ' '.join(names) if len(names) > 0 else None
+
             user = User(telegram_id=message.chat.id,
                         username=message.from_user.username,
-                        full_name=' '.join(names))
+                        full_name=full_name)
             user.save()
 
             self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
@@ -133,6 +135,10 @@ class GallowsBot(TeleBot):
         else:
             self.send_message(message.chat.id, M.NOT_FOUND, reply_markup=main_menu)
 
+    @handler_log
+    def wl_diff_top(self, message: Message):
+        self._send_wl_top(telegram_id=message.chat.id)
+
     # --- Shortcut methods ---
 
     def _send_current_word(self, user: User):
@@ -158,6 +164,30 @@ class GallowsBot(TeleBot):
 
     def _send_stats(self, user: User):
         self.send_message(user.telegram_id, M.STATS(user))
+
+    def _send_wl_top(self, telegram_id: int):
+        response = M.WL_TOP_HEAD
+        line_template = '{i}. {medal}{identifier} {wl:>10}\n'
+
+        def medals_gen():
+            for m in ('🥇 ', '🥈 ', '🥉 '):
+                yield m
+            while True:
+                yield ''
+
+        limit = 10
+        for i, user in enumerate(User.top_by_wl_diff()[:limit]):
+            number = i + 1
+            identifier = user.username or user.full_name or user.telegram_id
+
+            response += line_template.format(
+                i=number,
+                medal=medals_gen(),
+                identifier=identifier,
+                wl=user.wl_diff
+            )
+
+        self.send_message(telegram_id, response, parse_mode='Markup')
 
     # --- Utility methods ---
 

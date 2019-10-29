@@ -1,3 +1,5 @@
+from typing import Iterable
+
 import mongoengine as me
 import config
 from logger import logger
@@ -17,8 +19,30 @@ class User(me.Document):
     wins = me.IntField(null=False, default=0)
     games = me.IntField(null=False, default=0)
 
+    @classmethod
+    def top_by_wl_diff(cls) -> Iterable:
+        return sorted(cls.objects.all(), reverse=True, key=lambda u: u.wl_diff)
+
+    @classmethod
+    def top_by_wins(cls) -> Iterable:
+        return sorted(cls.objects.all(), reverse=True, key=lambda u: u.wins)
+
     def is_playing(self) -> bool:
         return self.current_word is not None
+
+    @property
+    def mistakes(self):
+        letters_played = len(set(self.used_letters))
+        correct_letters_played = len(set(self.current_word)) - 1    # Minus 1 is to remove '_' from set
+        return letters_played - correct_letters_played
+
+    @property
+    def looses(self):
+        return self.games - self.wins
+
+    @property
+    def wl_diff(self):
+        return self.wins - self.looses
 
     def new_game(self, word: str):
         self.complete_word = word
@@ -40,16 +64,6 @@ class User(me.Document):
     def loose(self):
         self._end_game()
         self.save()
-
-    @property
-    def mistakes(self):
-        letters_played = len(set(self.used_letters))
-        correct_letters_played = len(set(self.current_word)) - 1    # Minus 1 is to remove '_' from set
-        return letters_played - correct_letters_played
-
-    @property
-    def looses(self):
-        return self.games - self.wins
 
     def guess_letter(self, letter: str):
         if len(letter) != 1:
