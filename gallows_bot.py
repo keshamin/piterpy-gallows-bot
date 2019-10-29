@@ -7,7 +7,7 @@ from messages import Messages as M
 from markups import main_menu, gen_game_markup
 from models import User, Word
 from stickers import MISTAKE_SICKERS, LOOSE_STICKER
-from logger import logger
+from logger import logger, handler_log
 
 
 class GallowsBot(TeleBot):
@@ -42,7 +42,7 @@ class GallowsBot(TeleBot):
         self.message_handler(func=lambda m: True)(self.not_found)
 
     # --- Handlers ---
-
+    @handler_log
     def start(self, message: Message):
         if len(User.objects.filter(telegram_id=message.chat.id)) == 0:
             user = User(telegram_id=message.chat.id)
@@ -53,10 +53,12 @@ class GallowsBot(TeleBot):
         else:
             self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
 
+    @handler_log
     def info(self, message: Message):
         self.send_message(message.chat.id, M.INFO, reply_markup=main_menu)
     
     # Gallows section
+    @handler_log
     def new_game(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
     
@@ -72,6 +74,7 @@ class GallowsBot(TeleBot):
         self.send_message(message.chat.id, M.THINK_OF_LETTERS(len(random_word)))
         self._send_current_word(user)
 
+    @handler_log
     def give_up(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
 
@@ -81,6 +84,7 @@ class GallowsBot(TeleBot):
 
         self._send_stats(user)
 
+    @handler_log
     def guess_letter(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
         letter = message.text.strip().lower()
@@ -108,9 +112,11 @@ class GallowsBot(TeleBot):
             else:
                 self._send_current_word(user)
 
+    @handler_log
     def rules(self, message: Message):
         self._send_rules(chat_id=message.chat.id)
 
+    @handler_log
     def not_found(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
 
