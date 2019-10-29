@@ -6,7 +6,8 @@ import time
 
 bot = GallowsBot(
     admin_ids=config.ADMIN_IDS,
-    token=config.TOKEN
+    token=config.TOKEN,
+    threaded=False
 )
 
 while True:
