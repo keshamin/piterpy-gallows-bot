@@ -28,6 +28,6 @@ def handler_log(func: callable) -> callable:
             log_string += f', Additional args: {args[1:]}'
 
         logger.info(log_string)
-        return func(*args, **kwargs)
+        return func(self, *args, **kwargs)
 
     return wrapper
