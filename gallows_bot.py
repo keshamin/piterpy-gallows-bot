@@ -41,6 +41,8 @@ class GallowsBot(TeleBot):
 
         self.message_handler(regexp=f'^{M.INFO_BUTTON}$')(self.info)
 
+        self.message_handler(commands=['wl_top'])(self.wl_diff_top)
+
         self.message_handler(func=lambda m: True)(self.not_found)
 
     # --- Handlers ---
