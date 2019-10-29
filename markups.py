@@ -39,6 +39,7 @@ def gen_game_markup(word, used_letters):
     return game_markup
 
 
+# TODO: can be deleted if it's not used again soon
 def top_numbers_gen():
     for m in ('🥇 ', '🥈 ', '🥉 '):
         yield m

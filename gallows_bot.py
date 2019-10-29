@@ -4,7 +4,7 @@ from telebot import TeleBot
 from telebot.types import Message
 
 from messages import Messages as M
-from markups import main_menu, gen_game_markup, top_numbers_gen
+from markups import main_menu, gen_game_markup
 from models import User, Word
 from stickers import MISTAKE_SICKERS, LOOSE_STICKER
 from logger import logger, handler_log
@@ -168,27 +168,25 @@ class GallowsBot(TeleBot):
         self.send_message(user.telegram_id, M.STATS(user))
 
     def _send_wl_top(self, telegram_id: int):
-        response = M.WL_TOP_HEAD
+        response = ''
+        # Line length on mobiles ~ 30 chars
         line_template = '{i:<4}{identifier:<20}{wl:>4}\n'
-
-        numbers = top_numbers_gen()
 
         limit = 10
         for i, user in enumerate(User.top_by_wl_diff()[:limit]):
             identifier = user.username or user.full_name or user.telegram_id
+            if telegram_id == user.telegram_id:
+                identifier = f'{identifier} (Я)'
 
             line = line_template.format(
-                i=next(numbers),
+                i=i + 1,
                 identifier=identifier,
                 wl=user.wl_diff
             )
 
-            if telegram_id == user.telegram_id:
-                line = f'*{line}*'
-
             response += line
 
-        response = f'```{response}```'
+        response = f'{M.WL_TOP_HEAD}```{response}```'
 
         self.send_message(telegram_id, response, parse_mode='Markdown')
 
