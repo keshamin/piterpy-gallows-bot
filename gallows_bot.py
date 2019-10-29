@@ -170,7 +170,7 @@ class GallowsBot(TeleBot):
     def _send_wl_top(self, telegram_id: int):
         response = ''
         # Line length on mobiles ~ 30 chars
-        line_template = '{i:<4}{identifier:<20}{wl:>4}\n'
+        line_template = '{i:<3}{identifier:<20}{wl:>3}\n'
 
         limit = 10
         for i, user in enumerate(User.top_by_wl_diff()[:limit]):
