@@ -150,4 +150,4 @@ class GallowsBot(TeleBot):
     # --- Utility methods ---
 
     def get_mistake_sticker(self, mistake_num: int) -> str:
-        return MISTAKE_SICKERS[mistake_num]
+        return MISTAKE_SICKERS[mistake_num - 1]
