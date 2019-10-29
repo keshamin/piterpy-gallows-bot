@@ -189,7 +189,7 @@ class GallowsBot(TeleBot):
                 wl=user.wl_diff
             )
 
-        self.send_message(telegram_id, response, parse_mode='Markup')
+        self.send_message(telegram_id, response, parse_mode='Markdown')
 
     # --- Utility methods ---
 
