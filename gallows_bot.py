@@ -32,7 +32,9 @@ class GallowsBot(TeleBot):
         self.message_handler(commands=['giveup'])(self.give_up)
         self.message_handler(regexp=f'^{M.GIVEUP_BUTTON}')(self.give_up)
 
-        self.message_handler(func=lambda m: len(m.text.strip()) == 1 and m.text.isalnum())(self.guess_letter)
+        self.message_handler(func=lambda m: m.text is not None and
+                                            len(m.text.strip()) == 1 and
+                                            m.text.isalnum())(self.guess_letter)
 
         self.message_handler(commands=['rules'])(self.rules)
         self.message_handler(regexp=f'^{M.RULES_BUTTON}$')(self.rules)
