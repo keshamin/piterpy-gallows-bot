@@ -169,7 +169,7 @@ class GallowsBot(TeleBot):
 
     def _send_wl_top(self, telegram_id: int):
         response = M.WL_TOP_HEAD
-        line_template = '{i}. {medal}{identifier} {wl:>10}\n'
+        line_template = '{i}. {medal}{identifier:<20}{wl:>4}\n'
 
         medals = medals_gen()
 
