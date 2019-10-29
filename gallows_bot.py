@@ -178,12 +178,17 @@ class GallowsBot(TeleBot):
             number = i + 1
             identifier = user.username or user.full_name or user.telegram_id
 
-            response += line_template.format(
+            line = line_template.format(
                 i=number,
                 medal=next(medals),
                 identifier=identifier,
                 wl=user.wl_diff
             )
+
+            if telegram_id == user.telegram_id:
+                line = f'*{line}*'
+
+            response += line
 
         self.send_message(telegram_id, response, parse_mode='Markdown')
 
