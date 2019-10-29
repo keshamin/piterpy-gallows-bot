@@ -39,8 +39,10 @@ def gen_game_markup(word, used_letters):
     return game_markup
 
 
-def medals_gen():
+def top_numbers_gen():
     for m in ('🥇 ', '🥈 ', '🥉 '):
         yield m
+    num = 4
     while True:
-        yield ''
+        yield f'{num}.'
+        num += 1
