@@ -216,7 +216,7 @@ class GallowsBot(TeleBot):
 
         for i, user in enumerate(full_top[:self.top_limit]):
             identifier = user.username or user.full_name or user.telegram_id
-            if highlight_user.telegram_id == user.telegram_id:
+            if highlight_user and highlight_user.telegram_id == user.telegram_id:
                 identifier = f'{identifier} (Я)'
                 user_in_top = True
 
