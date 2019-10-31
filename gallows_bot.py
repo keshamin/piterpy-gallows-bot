@@ -16,7 +16,7 @@ class GallowsBot(TeleBot):
     def __init__(self, admin_ids: List[int], *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.mistakes_allowed = 7  # 5 <= x <= 10
+        self.mistakes_allowed = 8  # 5 <= x <= 10
         self.top_limit = 10
 
         self.register_handlers()
