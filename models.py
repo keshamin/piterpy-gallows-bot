@@ -88,4 +88,5 @@ class Word(me.Document):
 
     @classmethod
     def get_random_word(cls) -> str:
-        return cls.objects.aggregate({'$sample': {'size': 1}}).next()['_id']
+        word = cls.objects.aggregate({'$sample': {'size': 1}}).next()['_id']
+        return word.lower()
