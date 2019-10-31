@@ -16,6 +16,7 @@ class GallowsBot(TeleBot):
         super().__init__(*args, **kwargs)
 
         self.mistakes_allowed = 10  # max == 10
+        self.top_limit = 10
 
         self.register_handlers()
 
@@ -141,7 +142,8 @@ class GallowsBot(TeleBot):
 
     @handler_log
     def wl_diff_top(self, message: Message):
-        self._send_wl_top(telegram_id=message.chat.id)
+        user = User.objects.get(telegram_id=message.chat.id)
+        self._send_wl_top(user)
 
     # --- Shortcut methods ---
 
@@ -159,7 +161,7 @@ class GallowsBot(TeleBot):
         self.send_message(user.telegram_id, M.IT_WAS(user.complete_word), reply_markup=main_menu)
 
     def _mistake(self, user: User):
-        self.send_sticker(user.telegram_id, self.get_mistake_sticker(user.mistakes))
+        self.send_sticker(user.telegram_id, self._get_mistake_sticker(user.mistakes))
         self._send_current_word(user)
 
     def _win(self, user: User):
@@ -172,32 +174,50 @@ class GallowsBot(TeleBot):
     def _send_stats(self, user: User):
         self.send_message(user.telegram_id, M.STATS(user))
 
-    def _send_wl_top(self, telegram_id: int):
+    def _send_wl_top(self, user: User):
+        full_top = User.top_by_wl_diff()
+        self.send_message(user.telegram_id,
+                          self._get_wl_top_text(full_top=full_top, highlight_user=user),
+                          parse_mode='Markdown')
+
+    # --- Utility methods ---
+
+    def _get_mistake_sticker(self, mistake_num: int) -> str:
+        return MISTAKE_SICKERS[mistake_num - 1]
+
+    def _get_wl_top_text(self, full_top: List[User], highlight_user: User = None) -> str:
+        """
+        Always send with parse_mode='Markdown'
+        :param full_top: list of users sorted by wl_diff desc
+        :param highlight_user: User to highlight in top
+        :return: Pre-formatted message text with Markdown syntax
+        """
         # Line length on mobiles ~ 30 chars
         line_template = '{i:<3}{identifier:<20}{wl:>3}\n'
+
+        user_in_top = False
 
         # Head line
         response = line_template.format(i='№', identifier='Имя / ID', wl='+/-')
 
-        limit = 10
-        for i, user in enumerate(User.top_by_wl_diff()[:limit]):
+        for i, user in enumerate(full_top[:self.top_limit]):
             identifier = user.username or user.full_name or user.telegram_id
-            if telegram_id == user.telegram_id:
+            if highlight_user.telegram_id == user.telegram_id:
                 identifier = f'{identifier} (Я)'
+                user_in_top = True
 
-            line = line_template.format(
-                i=i + 1,
-                identifier=identifier,
-                wl=user.wl_diff
-            )
-
+            line = line_template.format(i=i + 1, identifier=identifier, wl=user.wl_diff)
             response += line
 
-        response = f'```\n{response}\n```'
+        # If there is a target user and they are not in top
+        if not user_in_top and highlight_user in full_top:
+            place = full_top.index(highlight_user) + 1
+            identifier = highlight_user.username or highlight_user.full_name or highlight_user.telegram_id
+            identifier = f'{identifier} (Я)'
+            line = line_template.format(i=place, identifier=identifier, wl=highlight_user.wl_diff)
+            response += f'\n{line}'
 
-        self.send_message(telegram_id, response, parse_mode='Markdown')
+        response += f'Всего игроков: {len(full_top)}'
 
-    # --- Utility methods ---
+        return f'```\n{response}\n```'
 
-    def get_mistake_sticker(self, mistake_num: int) -> str:
-        return MISTAKE_SICKERS[mistake_num - 1]

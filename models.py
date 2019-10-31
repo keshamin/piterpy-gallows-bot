@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, List
 
 import mongoengine as me
 import config
@@ -20,7 +20,7 @@ class User(me.Document):
     games = me.IntField(null=False, default=0)
 
     @classmethod
-    def top_by_wl_diff(cls) -> Iterable:
+    def top_by_wl_diff(cls) -> List:
         return sorted(cls.objects.all(), reverse=True, key=lambda u: u.wl_diff)
 
     @classmethod
