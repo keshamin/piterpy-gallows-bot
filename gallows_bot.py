@@ -16,7 +16,7 @@ class GallowsBot(TeleBot):
     def __init__(self, admin_ids: List[int], *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.mistakes_allowed = 10  # max == 10
+        self.mistakes_allowed = 7  # 5 <= x <= 10
         self.top_limit = 10
 
         self.register_handlers()
@@ -205,7 +205,8 @@ class GallowsBot(TeleBot):
     # --- Utility methods ---
 
     def _get_mistake_sticker(self, mistake_num: int) -> str:
-        return MISTAKE_SICKERS[mistake_num - 1]
+        sticker_index = len(MISTAKE_SICKERS) - self.mistakes_allowed + mistake_num - 1
+        return MISTAKE_SICKERS[sticker_index]
 
     def _get_wl_top_text(self, full_top: List[User], highlight_user: User = None) -> str:
         """
