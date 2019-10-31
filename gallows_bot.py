@@ -49,6 +49,8 @@ class GallowsBot(TeleBot):
 
         self.message_handler(commands=['stop_top'], func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.stop_top)
 
+        self.message_handler(regexp=r'^send__[0-9]+__', func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.send_custom)
+
         self.message_handler(func=lambda m: True)(self.not_found)
 
     # --- Handlers ---
@@ -151,6 +153,12 @@ class GallowsBot(TeleBot):
     @handler_log
     def stop_top(self, message: Message):
         self._send_stop_top_to_all()
+
+    @handler_log
+    def send_custom(self, message: Message):
+        _, to_chat_id, text = message.text.split('__')[:3]
+        sent_message = self.send_message(to_chat_id, text, parse_mode='Markdown')
+        self.forward_message(message.chat.id, to_chat_id, sent_message.message_id)
 
     # --- Shortcut methods ---
 
