@@ -4,7 +4,7 @@ import re
 
 
 main_menu = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-main_menu.add(*[types.KeyboardButton(text) for text in (M.GALLOWS_BUTTON, M.INFO_BUTTON)])
+main_menu.add(*[types.KeyboardButton(text) for text in (M.GALLOWS_BUTTON, M.STATS_BUTTON)])
 
 digits = ['1234567890']
 english = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm']

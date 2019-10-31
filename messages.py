@@ -10,8 +10,9 @@ class Messages(object):
         return attr
 
     # Main menu
-    GALLOWS_BUTTON = 'Играть в виселицу'
+    GALLOWS_BUTTON = 'Играть в виселицу ⚔️'
     INFO_BUTTON = 'Инфо'
+    STATS_BUTTON = 'Рейтинг игроков 🔝'
 
     START_MESSAGE = 'Привет! Здесь будет стартовый текст.'
     # TODO: add description
