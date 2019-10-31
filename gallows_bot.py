@@ -8,6 +8,7 @@ from markups import main_menu, gen_game_markup
 from models import User, Word
 from stickers import MISTAKE_SICKERS, LOSE_STICKER
 from logger import logger, handler_log
+import config
 
 
 class GallowsBot(TeleBot):
@@ -45,6 +46,8 @@ class GallowsBot(TeleBot):
 
         self.message_handler(regexp=f'^{M.STATS_BUTTON}$')(self.wl_diff_top)
         self.message_handler(commands=['wl_top'])(self.wl_diff_top)
+
+        self.message_handler(commands=['stop_top'], func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.stop_top)
 
         self.message_handler(func=lambda m: True)(self.not_found)
 
@@ -144,6 +147,10 @@ class GallowsBot(TeleBot):
     def wl_diff_top(self, message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
         self._send_wl_top(user)
+
+    @handler_log
+    def stop_top(self, message: Message):
+        self._send_stop_top_to_all()
 
     # --- Shortcut methods ---
 
