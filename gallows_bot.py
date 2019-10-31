@@ -180,6 +180,13 @@ class GallowsBot(TeleBot):
                           self._get_wl_top_text(full_top=full_top, highlight_user=user),
                           parse_mode='Markdown')
 
+    def _send_stop_top_to_all(self):
+        top_text = self._get_wl_top_text(full_top=User.top_by_wl_diff())
+
+        for user in User.objects.all():
+            self.send_message(user.telegram_id, M.STOP_TOP)
+            self.send_message(user.telegram_id, top_text, parse_mode='Markdown')
+
     # --- Utility methods ---
 
     def _get_mistake_sticker(self, mistake_num: int) -> str:
@@ -209,13 +216,15 @@ class GallowsBot(TeleBot):
             line = line_template.format(i=i + 1, identifier=identifier, wl=user.wl_diff)
             response += line
 
+        response += '\n'
+
         # If there is a target user and they are not in top
         if not user_in_top and highlight_user in full_top:
             place = full_top.index(highlight_user) + 1
             identifier = highlight_user.username or highlight_user.full_name or highlight_user.telegram_id
             identifier = f'{identifier} (Я)'
             line = line_template.format(i=place, identifier=identifier, wl=highlight_user.wl_diff)
-            response += f'\n{line}'
+            response += line
 
         response += f'Всего игроков: {len(full_top)}'
 
