@@ -25,6 +25,9 @@ class GallowsBot(TeleBot):
     def register_handlers(self):
         self.message_handler(commands=['start'])(self.start)
 
+        self.message_handler(commands=['help'])(self.help)
+        self.message_handler(regexp=f'^{M.HELP_BUTTON}$')(self.help)
+
         # Gallows
         self.message_handler(commands=['play'])(self.new_game)
         self.message_handler(regexp=f'^{M.GALLOWS_BUTTON}$')(self.new_game)
@@ -38,8 +41,6 @@ class GallowsBot(TeleBot):
 
         self.message_handler(commands=['rules'])(self.rules)
         self.message_handler(regexp=f'^{M.RULES_BUTTON}$')(self.rules)
-
-        self.message_handler(regexp=f'^{M.INFO_BUTTON}$')(self.info)
 
         self.message_handler(regexp=f'^{M.STATS_BUTTON}$')(self.wl_diff_top)
         self.message_handler(commands=['wl_top'])(self.wl_diff_top)
@@ -62,11 +63,11 @@ class GallowsBot(TeleBot):
             self.send_message(message.chat.id, M.START_MESSAGE, reply_markup=main_menu)
             logger.info(f'New user: {user.telegram_id}, username: {message.from_user.username}')
         else:
-            self.send_message(message.chat.id, M.HELP, reply_markup=main_menu)
+            self._send_help(message.chat.id)
 
     @handler_log
-    def info(self, message: Message):
-        self.send_message(message.chat.id, M.INFO, reply_markup=main_menu)
+    def help(self, message: Message):
+        self._send_help(message.chat.id)
     
     # Gallows section
     @handler_log
@@ -149,6 +150,9 @@ class GallowsBot(TeleBot):
 
         game_markup = gen_game_markup(word=user.complete_word, used_letters=user.used_letters)
         self.send_message(user.telegram_id, spaced_word, reply_markup=game_markup)
+
+    def _send_help(self, chat_id: int):
+        self.send_message(chat_id, M.HELP, parse_mode='Markdown')
 
     def _lose(self, user: User):
         self.send_sticker(user.telegram_id, LOSE_STICKER)
