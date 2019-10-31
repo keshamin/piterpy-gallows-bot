@@ -37,12 +37,12 @@ class User(me.Document):
         return letters_played - correct_letters_played
 
     @property
-    def looses(self):
+    def loses(self):
         return self.games - self.wins
 
     @property
     def wl_diff(self):
-        return self.wins - self.looses
+        return self.wins - self.loses
 
     def new_game(self, word: str):
         self.complete_word = word
@@ -61,7 +61,7 @@ class User(me.Document):
         self._end_game()
         self.save()
 
-    def loose(self):
+    def lose(self):
         self._end_game()
         self.save()
 

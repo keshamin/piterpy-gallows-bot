@@ -6,7 +6,7 @@ from telebot.types import Message
 from messages import Messages as M
 from markups import main_menu, gen_game_markup
 from models import User, Word
-from stickers import MISTAKE_SICKERS, LOOSE_STICKER
+from stickers import MISTAKE_SICKERS, LOSE_STICKER
 from logger import logger, handler_log
 
 
@@ -90,8 +90,8 @@ class GallowsBot(TeleBot):
         user = User.objects.get(telegram_id=message.chat.id)
 
         # in this exact order!
-        self._loose(user)
-        user.loose()
+        self._lose(user)
+        user.lose()
 
         self._send_stats(user)
 
@@ -110,8 +110,8 @@ class GallowsBot(TeleBot):
 
         if letter not in user.complete_word:
             if user.mistakes > self.mistakes_allowed:
-                self._loose(user)
-                user.loose()
+                self._lose(user)
+                user.lose()
                 self._send_stats(user)
             else:
                 self._mistake(user)
@@ -150,8 +150,8 @@ class GallowsBot(TeleBot):
         game_markup = gen_game_markup(word=user.complete_word, used_letters=user.used_letters)
         self.send_message(user.telegram_id, spaced_word, reply_markup=game_markup)
 
-    def _loose(self, user: User):
-        self.send_sticker(user.telegram_id, LOOSE_STICKER)
+    def _lose(self, user: User):
+        self.send_sticker(user.telegram_id, LOSE_STICKER)
         self.send_message(user.telegram_id, M.IT_WAS(user.complete_word), reply_markup=main_menu)
 
     def _mistake(self, user: User):
