@@ -70,7 +70,7 @@ class GallowsBot(TeleBot):
 
     def get_random_player(self, message: Message):
         user = User.objects.aggregate({'$sample': {'size': 1}}).next()
-        self.send_message(message.chat.id, f'{user.telegram_id}, {user.wl_diff}')
+        self.send_message(message.chat.id, user)
 
 
     @handler_log
