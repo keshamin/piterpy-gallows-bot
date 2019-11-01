@@ -55,6 +55,16 @@ class GallowsBot(TeleBot):
 
     # --- Handlers ---
     @handler_log
+    def show_id_by_user(self, message: Message):
+        username = message.text.split('__')[1]
+        try:
+            user = User.objects.get(telegram_id=username)
+        except:
+            user = User.objects.get(full_name=username)
+        self.send_message(message.chat.id, user.telegram_id)
+
+
+    @handler_log
     def start(self, message: Message):
         if len(User.objects.filter(telegram_id=message.chat.id)) == 0:
 
