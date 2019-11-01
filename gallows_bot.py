@@ -51,9 +51,10 @@ class GallowsBot(TeleBot):
 
         self.message_handler(regexp=r'^send__[0-9]+__', func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.send_custom)
 
+        self.message_handler(regexp=r'^get_id__', func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.show_id_by_user)
+
         self.message_handler(func=lambda m: True)(self.not_found)
 
-        self.message_handler(regexp=r'^get_id__', func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.show_id_by_user)
 
     # --- Handlers ---
     @handler_log
