@@ -52,6 +52,7 @@ class GallowsBot(TeleBot):
         self.message_handler(regexp=r'^send__[0-9]+__', func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.send_custom)
 
         self.message_handler(regexp=r'^get_id__', func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.show_id_by_user)
+        self.message_handler(commands=['rand_player'], func=lambda msg: msg.chat.id in config.ADMIN_IDS)(self.get_random_player)
 
         self.message_handler(func=lambda m: True)(self.not_found)
 
@@ -65,6 +66,11 @@ class GallowsBot(TeleBot):
         except:
             user = User.objects.get(full_name=username)
         self.send_message(message.chat.id, user.telegram_id)
+
+
+    def get_random_player(self, message: Message):
+        user = User.objects.aggregate({'$sample': {'size': 1}}).next()
+        self.send_message(message.chat.id, f'{user.telegram_id}, {user.wl_diff}')
 
 
     @handler_log
