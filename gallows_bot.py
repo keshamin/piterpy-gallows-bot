@@ -60,7 +60,7 @@ class GallowsBot(TeleBot):
     def show_id_by_user(self, message: Message):
         username = message.text.split('__')[1]
         try:
-            user = User.objects.get(telegram_id=username)
+            user = User.objects.get(username=username)
         except:
             user = User.objects.get(full_name=username)
         self.send_message(message.chat.id, user.telegram_id)
